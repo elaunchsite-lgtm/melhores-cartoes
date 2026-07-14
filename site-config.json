@@ -1,0 +1,18 @@
+{
+  "siteName": "Melhores Cartões",
+  "siteDescription": "Guia completo e comparador dos melhores cartões de crédito do mercado em 2026. Encontre o cartão ideal para milhas, cashback ou anuidade zero.",
+  "primaryColor": "#7c3aed",
+  "secondaryColor": "#1a1a2e",
+  "navigation": [
+    { "label": "Início", "href": "/" },
+    { "label": "Blog", "href": "/blog" },
+    { "label": "Categorias", "href": "/categorias" },
+    { "label": "Sobre Nós", "href": "/sobre" },
+    { "label": "Contato", "href": "/contato" }
+  ],
+  "_plugins": {
+    "head": "",
+    "body": "",
+    "enabled": []
+  }
+}

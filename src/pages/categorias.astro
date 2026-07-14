@@ -1,0 +1,172 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CreditCard from '../components/CreditCard.astro';
+import { posts, CATEGORIES } from '../data/posts';
+
+const { searchParams } = Astro.url;
+const activeFilter = searchParams.get('filtro') || 'todos';
+
+// Filter logic based on query params
+const filteredPosts = activeFilter === 'todos'
+  ? posts
+  : posts.filter(p => {
+      if (activeFilter === 'cashback') return p.category === 'Cashback';
+      if (activeFilter === 'milhas') return p.category === 'Milhas & Viagens';
+      if (activeFilter === 'sem-anuidade') return p.category === 'Sem Anuidade';
+      if (activeFilter === 'alta-renda') return p.category === 'Alta Renda';
+      return true;
+    });
+
+// Helper to count posts in category
+const getCount = (catId: string) => {
+  if (catId === 'cashback') return posts.filter(p => p.category === 'Cashback').length;
+  if (catId === 'milhas') return posts.filter(p => p.category === 'Milhas & Viagens').length;
+  if (catId === 'sem-anuidade') return posts.filter(p => p.category === 'Sem Anuidade').length;
+  if (catId === 'alta-renda') return posts.filter(p => p.category === 'Alta Renda').length;
+  return 0;
+};
+---
+
+<Layout 
+  title="Categorias de Cartões de Crédito - Compare e Escolha"
+  description="Compare cartões de crédito por categoria: Cashback, Acúmulo de Milhas Aéreas, Sem Anuidade, ou Cartões Premium de Alta Renda."
+>
+
+  <!-- Header banner -->
+  <section class="bg-purple-900 text-white py-16 text-center">
+    <div class="max-w-4xl mx-auto px-4">
+      <h1 class="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl leading-tight">
+        Comparar por <span class="text-purple-300">Categorias</span>
+      </h1>
+      <p class="mt-4 text-sm sm:text-base text-purple-200 max-w-2xl mx-auto leading-relaxed">
+        Não existe um único "melhor cartão" para todo mundo. O ideal é encontrar o cartão cujos benefícios e regras de isenção de anuidade se alinhem ao seu padrão mensal de gastos.
+      </p>
+    </div>
+  </section>
+
+  <!-- Interactive Categories filter grid -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- Top Selector grid (4 big buttons) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-12">
+      
+      <!-- All Filter -->
+      <a 
+        href="/categorias?filtro=todos" 
+        class={`p-5 rounded-2xl border text-center transition-all flex flex-col justify-between h-36 ${activeFilter === 'todos' ? 'bg-purple-600 text-white border-purple-600 shadow-md shadow-purple-200' : 'bg-white text-slate-800 border-slate-100 hover:border-purple-200 hover:shadow-sm'}`}
+      >
+        <span class="text-2xl">💳</span>
+        <div class="text-left mt-4">
+          <h3 class="font-bold text-sm tracking-tight">Ver Todos</h3>
+          <p class={`text-[10px] mt-0.5 ${activeFilter === 'todos' ? 'text-purple-200' : 'text-slate-400'}`}>
+            {posts.length} cartões analisados
+          </p>
+        </div>
+      </a>
+
+      <!-- Other Categories -->
+      {CATEGORIES.map(cat => {
+        const isActive = activeFilter === cat.id;
+        const emoji = cat.id === 'cashback' ? '💰' : cat.id === 'milhas' ? '🛫' : cat.id === 'sem-anuidade' ? '🆓' : '👑';
+        return (
+          <a 
+            href={`/categorias?filtro=${cat.id}`} 
+            class={`p-5 rounded-2xl border text-center transition-all flex flex-col justify-between h-36 ${isActive ? 'bg-purple-600 text-white border-purple-600 shadow-md shadow-purple-200' : 'bg-white text-slate-800 border-slate-100 hover:border-purple-200 hover:shadow-sm'}`}
+          >
+            <span class="text-2xl">{emoji}</span>
+            <div class="text-left mt-4">
+              <h3 class="font-bold text-sm tracking-tight">{cat.name}</h3>
+              <p class={`text-[10px] mt-0.5 ${isActive ? 'text-purple-200' : 'text-slate-400'}`}>
+                {getCount(cat.id)} cartões analisados
+              </p>
+            </div>
+          </a>
+        );
+      })}
+
+    </div>
+
+    <!-- Active Description -->
+    <div class="bg-purple-50/50 border border-purple-100 rounded-2xl p-6 mb-10 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+      <div class="space-y-1">
+        <span class="text-xs font-bold uppercase tracking-wider text-purple-600">Categoria Selecionada</span>
+        <h2 class="font-display font-extrabold text-xl text-slate-900 uppercase tracking-tight">
+          {activeFilter === 'todos' ? 'Todos os Cartões de Crédito' : CATEGORIES.find(c => c.id === activeFilter)?.name}
+        </h2>
+        <p class="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-3xl">
+          {activeFilter === 'todos' 
+            ? 'Explore todas as opções avaliadas pela nossa curadoria independente.' 
+            : CATEGORIES.find(c => c.id === activeFilter)?.desc}
+        </p>
+      </div>
+      <div class="bg-purple-600 text-white font-bold text-xs px-3.5 py-1.5 rounded-full whitespace-nowrap shadow-sm">
+        {filteredPosts.length} Resultados
+      </div>
+    </div>
+
+    <!-- Cards display list/grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {filteredPosts.map(post => (
+        <article class="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-lg transition-all overflow-hidden flex flex-col justify-between group">
+          
+          <!-- Upper visual credit card representation -->
+          <div class="py-8 bg-slate-50 flex justify-center items-center relative overflow-hidden border-b border-slate-100">
+            <div class="scale-95 drop-shadow-md group-hover:scale-100 transition-transform duration-300">
+              <CreditCard 
+                color={post.cardColor} 
+                brand={post.cardBrand} 
+                level={post.cardLevel} 
+                score={post.score} 
+                category={post.category} 
+                size="md"
+              />
+            </div>
+          </div>
+
+          <!-- Summary list details -->
+          <div class="p-6 space-y-4 flex-grow flex flex-col justify-between">
+            <div class="space-y-3">
+              <!-- Meta -->
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-purple-600 bg-purple-50 px-2 py-0.5 rounded">
+                  {post.category}
+                </span>
+                <span class="text-xs font-bold text-slate-800">★ {post.score.toFixed(1)}</span>
+              </div>
+
+              <!-- Title -->
+              <h3 class="font-display font-extrabold text-lg text-slate-900 group-hover:text-purple-600 transition-colors">
+                {post.title.split(':')[0]}
+              </h3>
+
+              <!-- Parameter parameters bullet summary -->
+              <div class="grid grid-cols-2 gap-3 py-2 text-[11px] text-slate-500 border-t border-b border-slate-50">
+                <div>
+                  <span class="font-bold text-slate-400 block uppercase tracking-wider">Anuidade</span>
+                  <span class="font-semibold text-slate-700 truncate block" title={post.anuidade}>{post.anuidade}</span>
+                </div>
+                <div>
+                  <span class="font-bold text-slate-400 block uppercase tracking-wider">Salas VIP</span>
+                  <span class="font-semibold text-slate-700 truncate block" title={post.loungeAccess}>{post.loungeAccess}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="flex gap-3 pt-2">
+              <a 
+                href={`/blog/${post.slug}`} 
+                class="flex-1 text-center inline-flex items-center justify-center px-4 py-2.5 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white transition-all shadow-sm"
+              >
+                Ler Avaliação Completa
+              </a>
+            </div>
+          </div>
+
+        </article>
+      ))}
+    </div>
+
+  </section>
+
+</Layout>

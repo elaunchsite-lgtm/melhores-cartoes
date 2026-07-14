@@ -1,0 +1,6 @@
+{
+  "name": "Melhores Cartões",
+  "description": "Guia completo e reviews detalhadas sobre os melhores cartões de crédito do mercado, comparando benefícios, anuidade e cashback.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

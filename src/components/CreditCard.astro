@@ -1,0 +1,103 @@
+---
+interface Props {
+  color: string;
+  brand: "mastercard" | "visa" | "elo";
+  level: "Black" | "Platinum" | "Infinite" | "Gold" | "Nanquim";
+  score: number;
+  category: string;
+  size?: "sm" | "md" | "lg";
+}
+
+const { color, brand, level, score, category, size = "md" } = Astro.props;
+
+// Determine size classes
+const containerClasses = size === "sm" 
+  ? "w-64 h-40 text-xs" 
+  : size === "lg"
+    ? "w-full max-w-sm h-60 text-base"
+    : "w-72 h-44 text-sm";
+
+const chipClasses = size === "sm" ? "w-8 h-6 rounded-sm" : size === "lg" ? "w-14 h-10 rounded-lg" : "w-10 h-8 rounded-md";
+---
+
+<div class={`relative ${containerClasses} rounded-2xl p-6 bg-gradient-to-tr ${color} shadow-xl shadow-purple-900/10 hover:shadow-2xl hover:shadow-purple-600/15 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden group border border-white/5`}>
+  
+  <!-- Holographic overlay effect on hover -->
+  <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none"></div>
+  
+  <!-- Card Header: Level and Contactless -->
+  <div class="flex justify-between items-start">
+    <div>
+      <span class="font-display font-bold uppercase tracking-widest text-[10px] text-white/90 drop-shadow">
+        {level}
+      </span>
+      <p class="text-[9px] text-white/50 tracking-wider">MELHORES CARTÕES</p>
+    </div>
+    
+    <!-- Contactless signal SVG -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 17.5c2.5-2.5 2.5-6.5 0-9"/>
+      <path d="M7.5 20c3.5-3.5 3.5-9.5 0-13"/>
+      <path d="M10 22.5c4.5-4.5 4.5-12.5 0-17"/>
+    </svg>
+  </div>
+
+  <!-- Card Body: Chip -->
+  <div class="flex items-center">
+    <!-- Golden Chip Visual -->
+    <div class={`${chipClasses} bg-gradient-to-br from-amber-200 via-yellow-400 to-amber-500 relative flex items-center justify-center border border-amber-600/20 shadow-inner`}>
+      <div class="absolute inset-1.5 border border-amber-700/10 rounded-sm grid grid-cols-3 gap-0.5 opacity-60">
+        <div class="border-r border-b border-amber-700/20"></div>
+        <div class="border-r border-b border-amber-700/20"></div>
+        <div class="border-b border-amber-700/20"></div>
+        <div class="border-r border-amber-700/20"></div>
+        <div class="border-r border-amber-700/20"></div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card Footer: Brand and Score Overlay -->
+  <div class="flex justify-between items-end">
+    <div>
+      <p class="font-mono text-white/80 text-[11px] tracking-widest mb-1">•••• •••• •••• 2026</p>
+      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-semibold bg-white/10 text-white/90 backdrop-blur-sm">
+        {category}
+      </span>
+    </div>
+
+    <!-- Brand Logo Graphic -->
+    <div class="h-8 flex items-center">
+      {brand === "mastercard" && (
+        <div class="flex items-center -space-x-3">
+          <div class="w-6 h-6 rounded-full bg-rose-500 opacity-90"></div>
+          <div class="w-6 h-6 rounded-full bg-amber-500 opacity-80"></div>
+        </div>
+      )}
+      {brand === "visa" && (
+        <span class="font-display font-black italic text-white text-lg tracking-tight drop-shadow-sm select-none">
+          VISA
+        </span>
+      )}
+      {brand === "elo" && (
+        <div class="flex gap-1 items-center">
+          <span class="font-bold italic text-white text-sm">elo</span>
+          <div class="flex flex-col -space-y-1">
+            <div class="w-3 h-1.5 bg-cyan-400 rounded-sm"></div>
+            <div class="w-3 h-1.5 bg-red-400 rounded-sm"></div>
+            <div class="w-3 h-1.5 bg-yellow-400 rounded-sm"></div>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <!-- Floating Score Badge on larger sizes -->
+  {size !== "sm" && (
+    <div class="absolute top-4 right-4 bg-purple-600 text-white text-[10px] font-bold px-2 py-1 rounded-md border border-purple-400/20 shadow-md flex items-center gap-1 shadow-purple-900/20">
+      <span>★</span>
+      <span>{score.toFixed(1)}</span>
+    </div>
+  )}
+
+</div>
