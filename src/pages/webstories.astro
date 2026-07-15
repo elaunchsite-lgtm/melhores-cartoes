@@ -1,0 +1,30 @@
+---
+import { config } from '../lib/config';
+import Layout from '../layouts/Layout.astro';
+
+let stories: any[] = [];
+try {
+  const data = await import('../data/stories.json');
+  stories = Array.isArray(data.default) ? data.default : [];
+} catch {}
+---
+
+<Layout title="Web Stories" description="Stories visuais no formato Google AMP" currentPath="/webstories">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-3xl font-extrabold mb-2">📱 Web Stories</h1>
+    <p class="text-gray-500 mb-8">Confira nossas stories no formato AMP.</p>
+
+    {stories.length === 0 ? (
+      <div class="text-center py-16 text-gray-400"><p class="text-lg">Nenhuma Web Story publicada ainda.</p></div>
+    ) : (
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {stories.map((story: any) => (
+          <a href={`/stories/${story.slug}.html`} class="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all block">
+            {story.coverUrl ? <img src={story.coverUrl} alt={story.title} class="w-full aspect-[9/16] object-cover" /> : <div class="w-full aspect-[9/16] bg-purple-100 flex items-center justify-center text-3xl">📱</div>}
+            <div class="p-3"><h3 class="text-sm font-semibold text-gray-900 group-hover:text-purple-600 transition-colors line-clamp-2">{story.title}</h3></div>
+          </a>
+        ))}
+      </div>
+    )}
+  </section>
+</Layout>
