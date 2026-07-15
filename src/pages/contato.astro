@@ -175,8 +175,23 @@ import Layout from '../layouts/Layout.astro';
     if (form && overlay && resetBtn) {
       form.addEventListener('submit', (e) => {
         e.preventDefault();
-        overlay.classList.remove('hidden');
-        form.reset();
+        const data = new FormData(form);
+        fetch('https://painel.e-launch.com.br/api/leads', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: data.get('name'),
+            email: data.get('email'),
+            message: data.get('message'),
+            page: 'contato'
+          })
+        }).then(() => {
+          overlay.classList.remove('hidden');
+          form.reset();
+        }).catch(() => {
+          overlay.classList.remove('hidden');
+          form.reset();
+        });
       });
 
       resetBtn.addEventListener('click', () => {
