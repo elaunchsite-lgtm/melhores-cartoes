@@ -118,7 +118,7 @@ const navItems = config.navigation || [
           </div>
           <div>
             <h4 class="font-semibold text-xs text-white uppercase tracking-widest mb-4 opacity-80">Navegação</h4>
-            <div class="space-y-2">
+            <div data-no-edit class="space-y-2">
               {navItems.map(item => (
                 <a href={item.href} class="block text-sm text-slate-400 hover:text-white transition-colors">{item.label}</a>
               ))}
@@ -126,14 +126,14 @@ const navItems = config.navigation || [
           </div>
           <div>
             <h4 class="font-semibold text-xs text-white uppercase tracking-widest mb-4 opacity-80">Legal</h4>
-            <div class="space-y-2">
+            <div data-no-edit class="space-y-2">
               <a href="/politica-de-privacidade" class="block text-sm text-slate-400 hover:text-white transition-colors">Política de Privacidade</a>
               <a href="/termos-de-uso" class="block text-sm text-slate-400 hover:text-white transition-colors">Termos de Uso</a>
             </div>
           </div>
           <div>
             <h4 class="font-semibold text-xs text-white uppercase tracking-widest mb-4 opacity-80">Newsletter</h4>
-            <form class="flex gap-2" id="newsletter-form" onsubmit="event.preventDefault(); var e=document.getElementById('newsletter-email').value; if(e)fetch('https://painel.e-launch.com.br/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,page:'newsletter'})}).then(r=>{document.getElementById('newsletter-msg').style.display='block';document.getElementById('newsletter-msg').textContent='Inscricao realizada!'})">
+            <form class="flex gap-2" id="newsletter-form" onsubmit="event.preventDefault(); var e=document.getElementById('newsletter-email').value; if(e)fetch(window.location.origin+'/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,page:'newsletter'})}).then(r=>{document.getElementById('newsletter-msg').style.display='block';document.getElementById('newsletter-msg').textContent='Inscricao realizada!'})">
               <input id="newsletter-email" type="email" placeholder="Seu melhor e-mail" class="flex-1 px-3 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-purple-500"/>
               <button type="submit" class="px-4 py-2.5 rounded-xl text-sm font-bold text-white transition-all" style={`background-color: ${primary}`}>OK</button>
             </form>

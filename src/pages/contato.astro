@@ -176,7 +176,7 @@ import Layout from '../layouts/Layout.astro';
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         const data = new FormData(form);
-        fetch('https://painel.e-launch.com.br/api/leads', {
+        fetch(window.location.origin + '/api/leads', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
